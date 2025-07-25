@@ -28,7 +28,6 @@ coverage/
 /public/uploads/
 
 # Sequelize files
-migrations/*.js
 seeders/*.js
 databases/*.sql
 
