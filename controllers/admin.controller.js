@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     try {
         // Only allow required fields
         const { name, email, password, role, mobile, profile_image } = req.body;
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL;
         await registerAdmin({ name, email, password, role, mobile, profile_image, baseUrl });
         return res.json({ message: 'Register successful. Please check your email to verify your account.' });
     } catch (err) {
