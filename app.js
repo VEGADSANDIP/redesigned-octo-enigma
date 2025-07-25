@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     session({
-        secret: "my_secret",
+        secret: process.env.JWT_SECRET,
         resave: false,
         saveUninitialized: false,
     })
