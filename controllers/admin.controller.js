@@ -7,7 +7,7 @@ exports.register = async (req, res) => {
     // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ error: errors.array() });
     }
 
     try {
@@ -15,14 +15,13 @@ exports.register = async (req, res) => {
         const { name, email, password, role, mobile, profile_image } = req.body;
         const baseUrl = process.env.BASE_URL;
         await registerAdmin({ name, email, password, role, mobile, profile_image, baseUrl });
-        return res.json({ message: 'Register successful. Please check your email to verify your account.' });
+        return res.status(200).json({ message: 'Register successful. Please check your email to verify your account.' });
     } catch (err) {
-        console.error(err);
-        if (err.name === 'SequelizeUniqueConstraintError') {
-            return res.status(409).json({ message: 'Email already exists' });
-        }
-        return res.status(500).json({ message: 'Server error' });
-    }
+        res.status(err.status || 500).json({
+            message: err.message || 'Server error',
+            error: err.error || err
+        });
+    };
 };
 
 exports.verifyEmail = async (req, res) => {
@@ -32,16 +31,13 @@ exports.verifyEmail = async (req, res) => {
     }
     const success = await verifyEmail(token, email);
     if (success) {
-        return res.json({ message: 'Email verified successfully. You can now log in.' });
+        return res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
     } else {
         return res.status(400).json({ message: 'Invalid or expired verification link.' });
     }
 };
 
 exports.login = async (req, res) => {
-    if (!req.body) {
-        return res.status(400).json({ message: 'Request body(email, password) is missing or not parsed as JSON.' });
-    }
     const { email, password } = req.body;
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.ip;
     try {
@@ -49,26 +45,30 @@ exports.login = async (req, res) => {
         if (!result.success) {
             return res.status(401).json({ message: result.message });
         }
-        return res.json({ message: 'Login successfully', session_token: result.token });
+        return res.status(200).json({ message: 'Login successfully', session_token: result.token });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Server error' });
-    }
+        res.status(err.status || 500).json({
+            message: err.message || 'Server error',
+            error: err.error || err
+        });
+    };
 };
 
 exports.getProfile = (req, res) => {
-    if (!req.admin) {
-        return res.status(401).json({ message: 'Unauthorized: No admin found in request.' });
-    }
-    const { name, email, mobile, profile_image } = req.admin;
-    return res.json({ name, email, mobile, profile_image });
+    try {
+        const { name, email, mobile, profile_image } = req.admin;
+        return res.status(200).json({ name, email, mobile, profile_image });
+    } catch (err) {
+        res.status(err.status || 500).json({
+            message: err.message || 'Server error',
+            error: err.error || err
+        });
+    };
+
 };
 
 exports.updateProfile = async (req, res) => {
     try {
-        if (!req.admin) {
-            return res.status(401).json({ message: 'Unauthorized: No admin found in request.' });
-        }
         const { name, mobile } = req.body;
         let profile_image = req.admin.profile_image;
 
@@ -92,9 +92,11 @@ exports.updateProfile = async (req, res) => {
         req.admin.profile_image = profile_image;
         await req.admin.save();
 
-        return res.json({ message: 'Profile updated successfully' });
+        return res.status(200).json({ message: 'Profile updated successfully' });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Server error', error: err.message });
-    }
+        res.status(err.status || 500).json({
+            message: err.message || 'Server error',
+            error: err.error || err
+        });
+    };
 };
