@@ -1,5 +1,5 @@
 const { pariMeterTriangle, simpleInterest, countNtoOne, cheackPrimeNumber, triangleValidNot, factorialNumber, evenOneToN, maximumThreeNumber } = require('../services/find.service');
-const { handleErrorResponse } = require('../utils/errorHandler');
+const {  catchHandleErrorResponse } = require('../utils/errorHandler');
 
 exports.pariMeterTriangle = async (req, res) => {
     try {
@@ -133,7 +133,7 @@ exports.maximumThreeNumber = async (req, res) => {
         });
 
     } catch (err) {
-        handleErrorResponse(res, err, 'Failed to calculate maximum')
+        catchHandleErrorResponse(res, err, 'Failed to calculate maximum')
     };
 };
 

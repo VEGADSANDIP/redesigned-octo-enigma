@@ -74,7 +74,7 @@ exports.updateProfile = async (req, res) => {
 
         // Handle image upload
         if (req.file) {
-            const uploadDir = path.join(__dirname, '../public/UserProfileImg');
+            const uploadDir = path.join(__dirname, '../public/AdminProfileImg');
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, { recursive: true });
             }

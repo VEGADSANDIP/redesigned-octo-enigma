@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../controllers/admin.controller');
 const { registerValidation, loginValidation } = require('../validations/admin.validation');
 const { authenticateAdmin } = require('../middlewares/auth.middleware');
-const upload = require('../middlewares/multer');
+const upload = require('../config/multer.config');
 
 // Attach validation as middleware before the controller
 router.post('/register', registerValidation, User.register);
