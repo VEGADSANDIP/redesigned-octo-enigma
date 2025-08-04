@@ -3,19 +3,19 @@ require('dotenv').config();
 
 console.log('✅ Sequelize instance initialized');
 console.log('Database config:', {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    database: process.env.DB_NAME || 'game_db',
-    user: process.env.DB_USER || 'root'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
 });
 
 const sequelize = new Sequelize(
-    process.env.DB_NAME || 'game_db',
-    process.env.DB_USER || 'root',
-    process.env.DB_PASSWORD || 'ext@2707',
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-        host: process.env.DB_HOST || 'localhost',
-        port: process.env.DB_PORT || 3306,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
         dialect: "mysql",
         logging: false,
         pool: {
