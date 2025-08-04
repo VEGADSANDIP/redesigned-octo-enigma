@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Validators = require('../validators/find.validation');
+const Validators = require('../validators/find.validators');
 const Find = require('../controllers/find.controller');
 
 router.post('/pari-meter-triangle', Find.pariMeterTriangle);
